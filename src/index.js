@@ -1,14 +1,16 @@
 import _ from 'lodash';
 import reader from './reader.js';
 
-const iter = (file1, file2) => {
-  const keys = _.keys(file1);
+const iter = (data1, data2) => {
+  const key1 = _.keys(data1);
+  const key2 = _.keys(data2);
+  const keys = _.sortBy(key1, key2);
   keys.forEach((key) => {
-    if (typeof file1[key] === 'object') {
-      console.log(key, file1[key]);
-      iter(file1[key]);
+    if (typeof data1[key] === 'object') {
+      console.log(key, data1[key]);
+      iter(data1[key]);
     } else {
-      console.log(key, file1[key]);
+      console.log(key, data1[key]);
     }
   });
 };
