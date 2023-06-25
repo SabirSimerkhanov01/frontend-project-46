@@ -1,24 +1,33 @@
 import _ from 'lodash';
-import reader from './reader.js';
+import readFile from './reader.js';
+import getFormat from './formatters/index.js';
 
-const iter = (data1, data2) => {
+const getDifferences = (data1, data2) => {
   const key1 = _.keys(data1);
   const key2 = _.keys(data2);
-  const keys = _.merge(key1, key2);
-  const sortedKeys = _.sortBy(keys);
-  sortedKeys.forEach((key) => {
+  const unitedKeys = _.sortBy(_.union(key1, key2));
+  return unitedKeys.flatMap((key) => {
     if (typeof data1[key] === 'object' && typeof data2[key] === 'object') {
-      iter(data1[key], data2[key2]);
-    } else {
-      console.log(key, data1[key]);
-    }
+      return { key, value: getDifferences(data1[key], data2[key]), type: 'object' };
+    } if (_.has(data1, key) && !_.has(data2, key)) {
+      return { key, value: data1[key], type: 'deleted' };
+    } if (!_.has(data1, key) && _.has(data2, key)) {
+      return { key, value: data2[key], type: 'added' };
+    } if (data1[key] !== data2[key]) {
+      return {
+        key, value1: data1[key], value2: data2[key], type: 'changed',
+      };
+    } return {
+      key, value1: data1[key], value2: data2[key], type: 'nochanged',
+    };
   });
 };
 
-const genDiff = (file1, file2) => {
-  const data1 = reader(file1);
-  const data2 = reader(file2);
-  return iter(data1, data2);
+const iter = (path1, path2, format = 'stylish') => {
+  const data1 = readFile(path1);
+  const data2 = readFile(path2);
+  const result = getDifferences(data1, data2);
+  return getFormat(result, format);
 };
 
-export default genDiff;
+export default iter;
