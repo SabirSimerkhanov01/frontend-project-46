@@ -1,27 +1,47 @@
 const plain = (data) => {
   const arr = [];
-  let arkey = [];
   const keys = Object.keys(data);
 
-  const checkObj = (datas) => {
-    if (typeof datas !== 'object' || datas === null) {
-      return datas;
-    } if (typeof datas === 'object') {
+  const getValue = (value) => {
+    if (typeof value === 'string') {
+      return `'${value}'`;
+    } if (value === null) {
+      return value;
+    } if (typeof value === 'object') {
       return '[complex value]';
     }
+    return value;
+  };
+
+  let arrOfKey = [];
+  const iter = (data) => {
+    const keys = Object.keys(data);
+    keys.forEach((key) => {
+      if (data[key].type === 'object') {
+        arrOfKey.push(data[key].key);
+        iter(data[key].value);
+      } if (data[key].type === 'deleted') {
+        arr.push(`Property '${arrOfKey.join('.')}.${data[key].key}' was removed`);
+      } if (data[key].type === 'added') {
+        arr.push(`Property '${arrOfKey.join('.')}.${data[key].key}' was added with value: ${getValue(data[key].value)}`);
+      } if (data[key].type === 'changed') {
+        arr.push(`Property '${arrOfKey.join('.')}.${data[key].key}' was updated. From ${getValue(data[key].value1)} to ${getValue(data[key].value2)}`);
+      }
+    });
   };
 
   keys.forEach((key) => {
-    arkey = [];
-    arkey.push(data[key].key);
+    arrOfKey = [];
     if (data[key].type === 'object') {
-      arr.push(`Property '${arkey}' was added with value: '${plain(data[key].value)}'`);
+      arrOfKey.push(data[key].key);
+      iter(data[key].value);
+    }
+    if (data[key].type === 'deleted') {
+      arr.push(`Property '${data[key].key}' was removed`);
     } if (data[key].type === 'added') {
-      arr.push(`Property '${arkey}' was added with value: '${checkObj(data[key].value)}'`);
-    } if (data[key].type === 'deleted') {
-      arr.push(`Property '${arkey}' was removed`);
+      arr.push(`Property '${data[key].key}' was added with value: ${getValue(data[key].value)}`);
     } if (data[key].type === 'changed') {
-      arr.push(`Property '${arkey}' was updated. From '${checkObj(data[key].value1)}' to '${checkObj(data[key].value2)}'`);
+      arr.push(`Property '${data[key].key}' was updated. From ${getValue(data[key].value1)} to ${getValue(data[key].value2)}`);
     }
   });
   return arr.join('\n');

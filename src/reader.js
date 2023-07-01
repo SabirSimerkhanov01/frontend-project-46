@@ -10,7 +10,7 @@ const reader = (file) => {
   if (format === 'json') {
     return JSON.parse(readedFile);
   } if (format === 'yml' || format === 'yaml') {
-    return yaml.parse(readedFile);
+    return yaml.load(readedFile);
   }
 };
 
