@@ -1,55 +1,60 @@
-const stylish = (object, replacer = ' ', countOfReplacer = 1) => {
-  const getSize = (n) => replacer.repeat((n * 4 * countOfReplacer) - 2);
-  const size = 1;
-
-  const iter = (data) => {
+const stylish = (data, replacer = ' ', spacesCount = 1) => {
+  const str = (o, acc = 1) => {
     const arr = [];
-    const keys = Object.keys(data);
-
-    const checkData = (datas) => {
-      const arrOfStr = [];
-      if (typeof datas !== 'object' || datas === null) {
-        return datas;
-      } if (typeof datas === 'object') {
-        const keysOfCheck = Object.keys(datas);
-        keysOfCheck.forEach((key) => {
-          if (typeof datas[key] !== 'object') {
-            arrOfStr.push(`${getSize(size)}  ${key}: ${datas[key]}`);
-          } if (typeof datas[key] === 'object') {
-            arrOfStr.push(`${getSize(size)}  ${key}: ${checkData(datas[key])}`);
-          }
+    const getRepeat = (n) => replacer.repeat(n);
+    const sizKey = ((4 * spacesCount * acc) - 2);
+    const sizBrc = ((4 * spacesCount * acc) - 2 - spacesCount);
+    const checkValue = (value) => {
+      let add = 1;
+      const sizKey2 = sizBrc + (4 * add);
+      const sizBrc2 = sizBrc + (4 * add) - spacesCount;
+      const arr = [];
+      if (typeof value !== 'object') {
+        return String(value);
+      } if (value === null) {
+        return null;
+      }
+      if (typeof value === 'object') {
+        const entries = Object.entries(value);
+        entries.forEach(([key, value]) => {
+          add += 1;
+          arr.push(`${getRepeat(sizKey2)}  ${key}: ${checkValue(value)}`);
         });
       }
       return [
         '{',
-        ...arrOfStr,
-        '}',
+        ...arr,
+        `${getRepeat(sizBrc2)}}`,
       ].join('\n');
     };
 
-    keys.forEach((key) => {
-      if (data[key].type === 'object') {
-        arr.push(`${getSize(size)}  ${data[key].key}: ${iter(data[key].value)}`);
-      } if (data[key].type === 'added') {
-        arr.push(`${getSize(size)}+ ${data[key].key}: ${checkData(data[key].value)}`);
-      } if (data[key].type === 'deleted') {
-        arr.push(`${getSize(size)}- ${data[key].key}: ${checkData(data[key].value)}`);
-      } if (data[key].type === 'changed') {
-        arr.push(`${getSize(size)}- ${data[key].key}: ${checkData(data[key].value1)}`);
-        arr.push(`${getSize(size)}+ ${data[key].key}: ${checkData(data[key].value2)}`);
-      } if (data[key].type === 'nochanged') {
-        arr.push(`${getSize(size)}  ${data[key].key}: ${checkData(data[key].value2)}`);
+    const keys = Object.keys(o);
+    keys.forEach((keys) => {
+      const {
+        key, type, value, value1, value2,
+      } = o[keys];
+      if (type === 'object') {
+        arr.push(`${getRepeat(sizKey)}  ${key}: ${str(value, acc + 1)}`);
+      } if (type === 'added') {
+        arr.push(`${getRepeat(sizKey)}+ ${key}: ${checkValue(value)}`);
+      } if (type === 'deleted') {
+        arr.push(`${getRepeat(sizKey)}- ${key}: ${checkValue(value)}`);
+      } if (type === 'changed') {
+        arr.push(`${getRepeat(sizKey)}- ${key}: ${checkValue(value1)}`);
+        arr.push(`${getRepeat(sizKey)}+ ${key}: ${checkValue(value2)}`);
+      } if (type === 'nochanged') {
+        arr.push(`${getRepeat(sizKey)}  ${key}: ${checkValue(value2)}`);
       }
     });
+
     return [
       '{',
       ...arr,
-      '}',
+      `${getRepeat(sizBrc)}}`,
     ].join('\n');
   };
 
-  // return iter(object, 1);
-  return JSON.stringify(object, null, 2);
+  return str(data, 1);
 };
 
 export default stylish;
