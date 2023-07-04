@@ -6,8 +6,7 @@
   "type": "module",
   "scripts": {
     "lint": "npx eslint .",
-    "test-coverage": "npx jest --coverage",
-    "gendiff": "node bin/gendiff.js"
+    "test-coverage": "npx jest --coverage"
   },
   "repository": {
     "type": "git",
