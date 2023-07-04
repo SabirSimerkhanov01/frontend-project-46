@@ -8,26 +8,26 @@ const plain = (data) => {
     return '[complex value]';
   };
 
-  const arr = [];
-
   const iter = (obj, acc = '') => {
     const keys = Object.keys(obj);
-    keys.forEach((keyFromObj) => {
+    return keys.forEach((keyFromObj) => {
       const {
         key, value, value1, value2, type,
       } = obj[keyFromObj];
 
-      if (type === 'object') {
-        iter(value, `${acc + key}.`);
-      } if (type === 'deleted') {
-        arr.push(`Property '${acc + key}' was removed`);
-      } if (type === 'added') {
-        arr.push(`Property '${acc + key}' was added with value: ${getValue(value)}`);
-      } if (type === 'changed') {
-        arr.push(`Property '${acc + key}' was updated. From ${getValue(value1)} to ${getValue(value2)}`);
+      switch (type) {
+        case 'object':
+          return iter(value, `${acc + key}.`);
+        case 'deleted':
+          return `Property '${acc + key}' was removed`;
+        case 'added':
+          return `Property '${acc + key}' was added with value: ${getValue(value)}`;
+        case 'changed':
+          return `Property '${acc + key}' was updated. From ${getValue(value1)} to ${getValue(value2)}`;
+        default:
+          return new Error('error');
       }
     });
-    return arr.join('\n');
   };
 
   return iter(data);
