@@ -4,9 +4,8 @@ const plain = (data) => {
       return `'${value}'`;
     } if (typeof value !== 'object' || value === null) {
       return `${value}`;
-    } if (typeof value === 'object') {
-      return '[complex value]';
     }
+    return '[complex value]';
   };
 
   const arr = [];

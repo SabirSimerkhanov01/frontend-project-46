@@ -8,7 +8,7 @@ const stylish = (data, replacer = ' ', spacesCount = 1) => {
     const checkValue = (value, add) => {
       const sizKey2 = sizBrc + (4 * add) + 1;
       const sizBrc2 = sizBrc + (4 * add) - spacesCount;
-      const arr = [];
+      const arr2 = [];
       if (typeof value !== 'object') {
         return String(value);
       } if (value === null) {
@@ -16,19 +16,19 @@ const stylish = (data, replacer = ' ', spacesCount = 1) => {
       }
       if (typeof value === 'object') {
         const entries = Object.entries(value);
-        entries.forEach(([key, value]) => {
-          arr.push(`${getRepeat(sizKey2)}  ${key}: ${checkValue(value, add + 1)}`);
+        entries.forEach(([key, values]) => {
+          arr2.push(`${getRepeat(sizKey2)}  ${key}: ${checkValue(values, add + 1)}`);
         });
       }
       return [
         '{',
-        ...arr,
+        ...arr2,
         `${getRepeat(sizBrc2)}}`,
       ].join('\n');
     };
 
-    const keys = Object.keys(o);
-    keys.forEach((keys) => {
+    const allKeys = Object.keys(o);
+    allKeys.forEach((keys) => {
       const {
         key, type, value, value1, value2,
       } = o[keys];

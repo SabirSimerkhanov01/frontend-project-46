@@ -7,10 +7,14 @@ const readFiles = (type) => fs.readFileSync(path.resolve(process.cwd(), type), '
 const reader = (file) => {
   const format = file.split('.')[1];
   const readedFile = readFiles(file);
-  if (format === 'json') {
-    return JSON.parse(readedFile);
-  } if (format === 'yml' || format === 'yaml') {
-    return yaml.load(readedFile);
+  switch (format) {
+    case 'json':
+      return JSON.parse(readedFile);
+    case 'yml':
+    case 'yaml':
+      return yaml.load(readedFile);
+    default:
+      throw new Error(`${format} is not correct format. Please check format`);
   }
 };
 
