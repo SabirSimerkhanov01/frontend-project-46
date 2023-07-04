@@ -4,8 +4,8 @@ const stylish = (data, replacer = ' ', spacesCount = 1) => {
     const getRepeat = (n) => replacer.repeat(n);
     const sizKey = ((4 * spacesCount * acc) - 2);
     const sizBrc = ((4 * spacesCount * acc) - 2 - spacesCount);
-    const checkValue = (value) => {
-      let add = 1;
+
+    const checkValue = (value, add) => {
       const sizKey2 = sizBrc + (4 * add) + 1;
       const sizBrc2 = sizBrc + (4 * add) - spacesCount;
       const arr = [];
@@ -17,8 +17,7 @@ const stylish = (data, replacer = ' ', spacesCount = 1) => {
       if (typeof value === 'object') {
         const entries = Object.entries(value);
         entries.forEach(([key, value]) => {
-          add += 1;
-          arr.push(`${getRepeat(sizKey2)}  ${key}: ${checkValue(value)}`);
+          arr.push(`${getRepeat(sizKey2)}  ${key}: ${checkValue(value, add + 1)}`);
         });
       }
       return [
@@ -36,21 +35,21 @@ const stylish = (data, replacer = ' ', spacesCount = 1) => {
       if (type === 'object') {
         arr.push(`${getRepeat(sizKey)}  ${key}: ${str(value, acc + 1)}`);
       } if (type === 'added') {
-        arr.push(`${getRepeat(sizKey)}+ ${key}: ${checkValue(value)}`);
+        arr.push(`${getRepeat(sizKey)}+ ${key}: ${checkValue(value, 1)}`);
       } if (type === 'deleted') {
-        arr.push(`${getRepeat(sizKey)}- ${key}: ${checkValue(value)}`);
+        arr.push(`${getRepeat(sizKey)}- ${key}: ${checkValue(value, 1)}`);
       } if (type === 'changed') {
-        arr.push(`${getRepeat(sizKey)}- ${key}: ${checkValue(value1)}`);
-        arr.push(`${getRepeat(sizKey)}+ ${key}: ${checkValue(value2)}`);
+        arr.push(`${getRepeat(sizKey)}- ${key}: ${checkValue(value1, 1)}`);
+        arr.push(`${getRepeat(sizKey)}+ ${key}: ${checkValue(value2, 1)}`);
       } if (type === 'nochanged') {
-        arr.push(`${getRepeat(sizKey)}  ${key}: ${checkValue(value2)}`);
+        arr.push(`${getRepeat(sizKey)}  ${key}: ${checkValue(value2, 1)}`);
       }
     });
 
     return [
       '{',
       ...arr,
-      `${getRepeat(sizBrc)}}`,
+      `${getRepeat(sizBrc - 1)}}`,
     ].join('\n');
   };
 
