@@ -1,11 +1,13 @@
 {
   "name": "@hexlet/code",
-  "description": "[![Actions Status](https://github.com/SabirSimerkhanov01/frontend-project-46/workflows/hexlet-check/badge.svg)](https://github.com/SabirSimerkhanov01/frontend-project-46/actions)",
+  "description": "Сравнение файлов в формате JSON, yaml, yml",
   "version": "1.0.0",
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "test": "jest"
+    "lint": "npx eslint .",
+    "test-coverage": "npx jest --coverage",
+    "gendiff": "node bin/gendiff.js"
   },
   "repository": {
     "type": "git",
