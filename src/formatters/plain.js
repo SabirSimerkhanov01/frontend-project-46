@@ -1,49 +1,37 @@
 const plain = (data) => {
-  const arr = [];
-  const keys = Object.keys(data);
-
   const getValue = (value) => {
     if (typeof value === 'string') {
       return `'${value}'`;
-    } if (value === null) {
-      return value;
+    } if (typeof value !== 'object' || value === null) {
+      return `${value}`;
     } if (typeof value === 'object') {
       return '[complex value]';
     }
-    return value;
   };
 
-  let arrOfKey = [];
-  const iter = (data) => {
-    const keys = Object.keys(data);
-    keys.forEach((key) => {
-      if (data[key].type === 'object') {
-        arrOfKey.push(data[key].key);
-        iter(data[key].value);
-      } if (data[key].type === 'deleted') {
-        arr.push(`Property '${arrOfKey.join('.')}.${data[key].key}' was removed`);
-      } if (data[key].type === 'added') {
-        arr.push(`Property '${arrOfKey.join('.')}.${data[key].key}' was added with value: ${getValue(data[key].value)}`);
-      } if (data[key].type === 'changed') {
-        arr.push(`Property '${arrOfKey.join('.')}.${data[key].key}' was updated. From ${getValue(data[key].value1)} to ${getValue(data[key].value2)}`);
+  const arr = [];
+
+  const iter = (obj, acc = '') => {
+    const keys = Object.keys(obj);
+    keys.forEach((keyFromObj) => {
+      const {
+        key, value, value1, value2, type,
+      } = obj[keyFromObj];
+
+      if (type === 'object') {
+        iter(value, `${acc + key}.`);
+      } if (type === 'deleted') {
+        arr.push(`Property '${acc + key}' was removed`);
+      } if (type === 'added') {
+        arr.push(`Property '${acc + key}' was added with value: ${getValue(value)}`);
+      } if (type === 'changed') {
+        arr.push(`Property '${acc + key}' was updated. From ${getValue(value1)} to ${getValue(value2)}`);
       }
     });
+    return arr.join('\n');
   };
 
-  keys.forEach((key) => {
-    arrOfKey = [];
-    if (data[key].type === 'object') {
-      arrOfKey.push(data[key].key);
-      iter(data[key].value);
-    } if (data[key].type === 'deleted') {
-      arr.push(`Property '${data[key].key}' was removed`);
-    } if (data[key].type === 'added') {
-      arr.push(`Property '${data[key].key}' was added with value: ${getValue(data[key].value)}`);
-    } if (data[key].type === 'changed') {
-      arr.push(`Property '${data[key].key}' was updated. From ${getValue(data[key].value1)} to ${getValue(data[key].value2)}`);
-    }
-  });
-  return arr.join('\n');
+  return iter(data);
 };
 
 export default plain;
