@@ -10,9 +10,9 @@ const getPath = (fileName) => path.resolve(__dirname, '..', '__fixtures__', file
 const readFile = (type) => fs.readFileSync(getPath(type), 'utf-8');
 
 const nameFiles = [
-  ['__fixtures__/file1.json', '__fixtures__/file2.json', 'stylish', 'result1.txt'],
-  ['__fixtures__/file1.yaml', '__fixtures__/file2.yaml', 'plain', 'result_plain.txt'],
-  ['__fixtures__/file1.yml', '__fixtures__/file2.yml', 'json', 'result_json.txt'],
+  ['__fixtures__/fileDeep1.json', '__fixtures__/fileDeep2.json', 'stylish', 'result_deep_json.txt'],
+  ['__fixtures__/fileDeep1.yaml', '__fixtures__/fileDeep2.yaml', 'plain', 'result_deep_plain.txt'],
+  ['__fixtures__/fileDeep1.yml', '__fixtures__/fileDeep2.yml', 'json', 'result_deep_json2.txt'],
 ];
 
 test.each(nameFiles)('work function with formats', (file1, file2, format, result) => {

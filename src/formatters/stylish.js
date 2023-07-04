@@ -42,7 +42,7 @@ const stylish = (data, replacer = ' ', spacesCount = 1) => {
         arr.push(`${getRepeat(sizKey)}- ${key}: ${checkValue(value1, 1)}`);
         arr.push(`${getRepeat(sizKey)}+ ${key}: ${checkValue(value2, 1)}`);
       } if (type === 'nochanged') {
-        arr.push(`${getRepeat(sizKey)}  ${key}: ${checkValue(value2, 1)}`);
+        arr.push(`${getRepeat(sizKey)}  ${key}: ${checkValue(value, 1)}`);
       }
     });
 

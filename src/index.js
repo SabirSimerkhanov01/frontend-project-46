@@ -18,7 +18,7 @@ const getDifferences = (data1, data2) => {
         key, value1: data1[key], value2: data2[key], type: 'changed',
       };
     } return {
-      key, value1: data1[key], value2: data2[key], type: 'nochanged',
+      key, value: data2[key], type: 'nochanged',
     };
   });
 };
