@@ -6,7 +6,7 @@ const stylish = (data, replacer = ' ', spacesCount = 1) => {
     const sizBrc = ((4 * spacesCount * acc) - 2 - spacesCount);
     const checkValue = (value) => {
       let add = 1;
-      const sizKey2 = sizBrc + (4 * add);
+      const sizKey2 = sizBrc + (4 * add) + 1;
       const sizBrc2 = sizBrc + (4 * add) - spacesCount;
       const arr = [];
       if (typeof value !== 'object') {
