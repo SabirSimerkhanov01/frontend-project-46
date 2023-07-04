@@ -4,6 +4,9 @@
   "version": "1.0.0",
   "main": "src/index.js",
   "type": "module",
+  "bin": {
+    "gendiff": "bin/gendiff.js"
+  },
   "scripts": {
     "lint": "npx eslint .",
     "test-coverage": "npx jest --coverage"
