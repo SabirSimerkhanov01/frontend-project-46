@@ -35,8 +35,7 @@ const plain = (data) => {
     if (data[key].type === 'object') {
       arrOfKey.push(data[key].key);
       iter(data[key].value);
-    }
-    if (data[key].type === 'deleted') {
+    } if (data[key].type === 'deleted') {
       arr.push(`Property '${data[key].key}' was removed`);
     } if (data[key].type === 'added') {
       arr.push(`Property '${data[key].key}' was added with value: ${getValue(data[key].value)}`);
